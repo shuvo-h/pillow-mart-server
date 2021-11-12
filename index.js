@@ -24,6 +24,7 @@ async function run(){
         const ordersCollection = database.collection("orderList");
         const usersCollection = database.collection("allUser");
         const reviewCollection = database.collection("reviews");
+        const upCommingProductsCollection = database.collection("upCommingProducts");
 
         // ************************************************ //
         // Product collection API 
@@ -66,7 +67,7 @@ async function run(){
             const result = await ordersCollection.insertOne(orderInfo);
             res.json(result);
         })
-
+        
         // GET API (get all orders)
         app.get('/orders',async(req,res)=>{
             const query = {};
@@ -74,7 +75,7 @@ async function run(){
             const result = await cursor.toArray();
             res.json(result);
         })
-
+        
         // Get API (get a single order by ID)
         app.get("/orders/:orderId",async(req,res)=>{
             const {orderId} = req.params;
@@ -82,15 +83,23 @@ async function run(){
             const result = await ordersCollection.findOne(query);
             res.json(result)
         })
-        
+
+        // --------------------------------
+        // app.
         // GET API (get all orders by email query)
-        app.get("/orders",async(req,res)=>{
-            const queryMail = req.query.userEmail;
-            const query = { customerEmail: queryMail}
-            const cursor = ordersCollection.find(query);
-            const result = await cursor.toArray();
-            res.json(result);
+        app.get("/ordersList",async(req,res)=>{
+            const queryMail = req.query.email;
+            if (queryMail) {
+                const query = { customerEmail: queryMail}
+                const cursor = ordersCollection.find(query);
+                const result = await cursor.toArray();
+                res.json(result);
+            }else{
+                res.json([])
+            }
         })
+        // --------------------------------
+
         // DELETE API (delete an order by ID)
         app.delete('/orders/:orderId',async(req,res)=>{
             const {orderId} = req.params;
@@ -169,7 +178,15 @@ async function run(){
             const query = {_id: ObjectId(revId)}
             const result = await reviewCollection.deleteOne(query)
             res.json(result)
-            console.log(result);
+        })
+
+        // Upcomming Products
+        //GET API (get all upcomming products)
+        app.get('/upcommingProducts', async(req,res)=>{
+            const query = {}
+            const cursor = upCommingProductsCollection.find(query);
+            const upcommingProducts = await cursor.toArray();
+            res.json(upcommingProducts);
         })
 
     }finally{
