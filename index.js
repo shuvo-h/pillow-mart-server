@@ -84,8 +84,7 @@ async function run(){
             res.json(result)
         })
 
-        // --------------------------------
-        // app.
+        
         // GET API (get all orders by email query)
         app.get("/ordersList",async(req,res)=>{
             const queryMail = req.query.email;
@@ -98,7 +97,7 @@ async function run(){
                 res.json([])
             }
         })
-        // --------------------------------
+        
 
         // DELETE API (delete an order by ID)
         app.delete('/orders/:orderId',async(req,res)=>{
@@ -144,8 +143,6 @@ async function run(){
             const result = await usersCollection.updateOne(filter,updateDoc,options);
             res.json(result)
         })
-        // ************************************************ //
-        // Admin information API 
 
         // ************************************************ //
         // Review related API
@@ -195,7 +192,7 @@ async function run(){
 }
 run().catch(console.dir);
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Welcome to Pillow Mart!')
 })
 
 app.listen(port, () => {
